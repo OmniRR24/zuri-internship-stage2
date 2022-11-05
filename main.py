@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import os
 import openai
+from enum import Enum
 
 app = Flask(__name__)
 
@@ -16,11 +17,14 @@ def calc():
     x = int(request.args.get('x'))
     y = int(request.args.get('y'))
 
-    inputs = ['addition', 'subtraction', 'multiplication']
+    class Inputs(Enum):
+        addition = 1
+        subtraction = 2
+        multiplication = 3
     key_words = ['add', 'subtract', 'multiply']
     operator_list = ['+', '-', 'x']
 
-    if user_input not in inputs:
+    if user_input not in set(item.value for item in Inputs):
         response = openai.Completion.create(
             model="text-davinci-002",
             prompt=user_input,
@@ -30,19 +34,19 @@ def calc():
         data = response['choices'][0]['text']
         for operator in operator_list:
             if operator in data:
-                operation = inputs[operator_list.index(operator)]
+                operation = Inputs(operator_list.index(operator) + 1).name
         for word in key_words:
             if word in user_input:
-                operation = inputs[key_words.index(word)]
+                operation = Inputs(key_words.index(word) + 1).name
                 break
         answer = int(data.split(' ')[-1].strip('.'))
     else:
         operation = user_input
-        if operation == inputs[0]:
+        if operation == Inputs.addition:
             answer = x + y
-        elif operation == inputs[1]:
+        elif operation == Inputs.subtraction:
             answer = x - y
-        elif operation == inputs[2]:
+        elif operation == Inputs.multiplication:
             answer = x * y
     return jsonify(slackUsername='Fola27', result=answer, operation_type=operation)
 
