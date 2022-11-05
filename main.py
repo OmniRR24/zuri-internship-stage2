@@ -15,8 +15,12 @@ def calc():
 
     user_input = request.args.get('operation_type')
     user_input = str(user_input).lower()
-    x = int(request.args.get('x'))
-    y = int(request.args.get('y'))
+
+    try:
+        x = int(request.args.get('x'))
+        y = int(request.args.get('y'))
+    except:
+        pass
 
     Inputs = Enum('Inputs', ['addition', 'subtraction', 'multiplication'])
     inputs = ['addition', 'subtraction', 'multiplication']
