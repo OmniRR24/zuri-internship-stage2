@@ -6,7 +6,7 @@ from enum import Enum
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST', 'PUT'])
 def calc():
     operation = None
     answer = None
