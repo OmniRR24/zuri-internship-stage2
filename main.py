@@ -37,7 +37,10 @@ def calc():
             if word in user_input:
                 operation = inputs[key_words.index(word)]
                 break
-        answer = int(data.split(' ')[-1].strip('.'))
+        try:
+            answer = int(data.split(' ')[-1].strip('.'))
+        except ValueError:
+            answer = 'Invalid input'
     else:
         operation = user_input
         if operation == inputs[0]:
